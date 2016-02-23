@@ -34,6 +34,9 @@ public class Quiz {
 	public int getUserScore(){
 		return userScore;
 	}
+	public Collection<Question> getQuestions(){
+		return questions;
+	}
 	
 	//setters
 	public void setUser(User i){

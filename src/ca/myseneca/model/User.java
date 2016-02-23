@@ -26,7 +26,6 @@ public class User {
 	public String getPassword(){
 		return password;
 	}
-	
 	public Collection<Quiz> getAttemptedQuizes(){
 		return quizes;
 	}
