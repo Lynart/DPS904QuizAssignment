@@ -1,30 +1,48 @@
 package quiz.classes;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class InitDatabase {
+	private EntityManagerFactory emf;
+	private EntityManager em;
+	
+	public void getEntityManager() {
+		// Create the EntityManager
+		emf = Persistence
+				.createEntityManagerFactory("QuizEntityManager");
+		em = emf.createEntityManager();
+	}
+	
+	public void deleteAll(final Class<?> type) {
+		getEntityManager();
+		em.getTransaction().begin();
+		em.createQuery("DELETE FROM " + type.getSimpleName() + " o").executeUpdate();
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+	}
+	
+	public boolean insert(){
+		User user = new User();
+		user.setLogin("vince2@gmail.com");
+		user.setPassword("password");
+		getEntityManager();
+		em.getTransaction().begin();
+		
+		em.persist(user);
+		em.getTransaction().commit();
+		em.close();
+		emf.close();
+		
+		return true;
+	}
 
 	public static void main(String[] args) {
-		Configuration config = new Configuration();
-		
-		config.addAnnotatedClass(quiz.classes.User.class);
-		config.configure();
-		
-		new SchemaExport(config).create(true, true);
-		
-		SessionFactory factory = config.buildSessionFactory();
-		Session current = factory.getCurrentSession();
-		
-		current.beginTransaction();
-		User user = new User();
-		user.setLogin("vince@gmail.com");
-		user.setPassword("password");
-		current.save(user);
-		current.getTransaction().commit();
-
+		InitDatabase use = new InitDatabase();
+		use.deleteAll(User.class);
+		use.insert();
 	}
 
 }
