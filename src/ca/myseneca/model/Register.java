@@ -18,6 +18,7 @@ public class Register {
 	public void resetTables(){
 		getEntityManager();
 		em.getTransaction().begin();
+		em.createQuery("DELETE FROM " + UserResponse.class.getSimpleName() + " o").executeUpdate();
 		em.createQuery("DELETE FROM " + Answer.class.getSimpleName() + " o").executeUpdate();
 		em.createQuery("DELETE FROM " + Question.class.getSimpleName() + " o").executeUpdate();
 		em.createQuery("DELETE FROM " + Quiz.class.getSimpleName() + " o").executeUpdate();

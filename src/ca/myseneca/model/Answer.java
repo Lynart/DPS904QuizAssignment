@@ -1,5 +1,7 @@
 package ca.myseneca.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.persistence.*;
 
 
@@ -14,6 +16,8 @@ public class Answer {
 	@ManyToOne
 	private Question question;
 	private String description;
+	@OneToMany
+	private Collection<UserResponse> userResponses;
 	
 	//getters
 	public int getId(){
@@ -28,6 +32,9 @@ public class Answer {
 	public String getDescription(){
 		return description;
 	}
+	public Collection<UserResponse> getUserResponses(){
+		return userResponses;
+	}
 	
 	//setters
 	public void setCorrect(Boolean c){
@@ -38,6 +45,14 @@ public class Answer {
 	}
 	public void setDescription(String d){
 		description = d;
+	}
+	
+	public void addUserResponse(UserResponse u){
+		userResponses.add(u);
+	}
+	
+	public Answer(){
+		userResponses = new ArrayList<UserResponse>();
 	}
 	
 	//Useful methods

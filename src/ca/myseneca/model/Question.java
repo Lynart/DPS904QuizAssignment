@@ -5,101 +5,155 @@ import java.util.Collection;
 
 import javax.persistence.*;
 
+import com.sun.istack.Nullable;
 
 @Entity
-@Table(name="Question")
+@Table(name = "Question")
 public class Question {
 
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	//1 for easy, 2 for medium, 3 for hard
 	private int difficulty;
-	@ManyToOne
-	private Quiz quiz;
 	private String description;
 	private String explaination;
-	//Will hardcode type of questions and construct the UI accordingly
-	private String type;
+	private String hint;
+	// Will hardcode type of questions and construct the UI accordingly
+	@Enumerated(EnumType.STRING)
+	private QuestionType type;
+	@ManyToOne
+	private Quiz quiz;
 	@OneToMany
 	private Collection<Answer> answers;
-	
-	//getters
-	public int getId(){
+	@OneToOne
+	private Answer correctAnswer;
+	@OneToMany(mappedBy = "parentQuestion")
+	private Collection<Question> subQuestions;
+	@ManyToOne
+	@Nullable
+	private Question parentQuestion;
+	@OneToMany
+	private Collection<UserResponse> userResponses;
+
+	// getters
+	public int getId() {
 		return id;
 	}
-	public int getDifficulty(){
+
+	public int getDifficulty() {
 		return difficulty;
 	}
-	public Quiz getQuiz(){
-		return quiz;
-	}
-	public String getDescription(){
+
+	public String getDescription() {
 		return description;
 	}
-	public String getExplaination(){
+
+	public String getExplaination() {
 		return explaination;
 	}
-	public String getType(){
+
+	public String getHint() {
+		return hint;
+	}
+
+	public QuestionType getType() {
 		return type;
 	}
-	public Collection<Answer> getAnswers(){
+
+	public Quiz getQuiz() {
+		return quiz;
+	}
+
+	public Collection<Answer> getAnswers() {
 		return answers;
 	}
-	
-	//setters
-	public void setDifficulty(int d){
+
+	public Answer getCorrectAnswer() {
+		return correctAnswer;
+	}
+
+	public Collection<Question> getsubQuestions() {
+		return subQuestions;
+	}
+
+	public Question getParentQuestion() {
+		return parentQuestion;
+	}
+
+	public Collection<UserResponse> getUserResponses() {
+		return userResponses;
+	}
+
+	// setters
+	public void setDifficulty(int d) {
 		difficulty = d;
 	}
-	public void setQuiz(Quiz q){
-		quiz = q;
-	}
-	public void setDescription(String d){
+
+	public void setDescription(String d) {
 		description = d;
 	}
-	public void setExplaination(String e){
+
+	public void setExplaination(String e) {
 		explaination = e;
 	}
-	public void setType(String t){
+
+	public void setHint(String h) {
+		hint = h;
+	}
+
+	public void setType(QuestionType t) {
 		type = t;
 	}
-	public void addAnswer(Answer a){
+
+	public void setQuiz(Quiz q) {
+		quiz = q;
+	}
+
+	public void addAnswer(Answer a) {
 		answers.add(a);
 	}
-	
-	//Constructor
-	public Question(){
-		answers = new ArrayList<Answer>();
+
+	public void setCorrectAnswer(Answer a) {
+		correctAnswer = a;
 	}
-	
-	//Useful methods
-	public String toString(){
+
+	public void addSubQuestions(Question q) {
+		subQuestions.add(q);
+	}
+
+	public void setParentQuestion(Question q) {
+		parentQuestion = q;
+	}
+
+	public void addUserResponse(UserResponse u) {
+		userResponses.add(u);
+	}
+
+	// Constructor
+	public Question() {
+		answers = new ArrayList<Answer>();
+		subQuestions = new ArrayList<Question>();
+		userResponses = new ArrayList<UserResponse>();
+	}
+
+	// Useful methods
+	public String toString() {
 		return this.description;
 	}
-	
-	//May be useful when randomizing question selection
+
+	// May be useful when randomizing question selection
 	@Override
 	public boolean equals(Object obj) {
-	    if (obj == null) {
-	        return false;
-	    }
-	    if (!Question.class.isAssignableFrom(obj.getClass())) {
-	        return false;
-	    }
-	    final Question other = (Question) obj;
-	    if (this.id==other.id) {
-	        return false;
-	    }
-	    return true;
-	}
-	
-	//If are implement multi multi choice, this needs to be changed. 
-	//If multi multi choice is not required for the assignment, lets not implement it
-	public Answer getCorrectAnswer() throws Exception{
-		for(Answer a : answers){
-			if (a.getCorrect()){
-				return a;
-			}
+		if (obj == null) {
+			return false;
 		}
-		throw new Exception("No answer found");
+		if (!Question.class.isAssignableFrom(obj.getClass())) {
+			return false;
+		}
+		final Question other = (Question) obj;
+		if (this.id == other.id) {
+			return false;
+		}
+		return true;
 	}
 }

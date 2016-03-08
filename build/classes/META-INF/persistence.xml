@@ -5,6 +5,7 @@
 		<class> ca.myseneca.model.Answer</class>
 		<class> ca.myseneca.model.Question</class>
 		<class> ca.myseneca.model.Quiz</class>
+		<class>ca.myseneca.model.UserResponse</class>
 		
 	  <properties>
          <property name="javax.persistence.jdbc.url" value="jdbc:mysql://zenit.senecac.on.ca/dps904_161a11"/>

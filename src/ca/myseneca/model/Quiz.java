@@ -5,55 +5,77 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.*;
 
-
 @Entity
-@Table(name="Quiz")
+@Table(name = "Quiz")
 public class Quiz {
 
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	private int attempt;
 	@Temporal(TemporalType.DATE)
 	private Date dateCreated;
 	private int userScore;
-	@OneToOne
+	@ManyToOne
 	private User user;
 	@OneToMany
 	private Collection<Question> questions;
-	
-	
-	//getters
-	public int getId(){
+	@OneToMany
+	private Collection<UserResponse> userResponse;
+
+	// getters
+	public int getId() {
 		return id;
 	}
-	public Date getDateCreated(){
+
+	public int getAttempt() {
+		return attempt;
+	}
+
+	public Date getDateCreated() {
 		return dateCreated;
 	}
-	public User getUser(){
+
+	public User getUser() {
 		return user;
 	}
-	public int getUserScore(){
+
+	public int getUserScore() {
 		return userScore;
 	}
-	public Collection<Question> getQuestions(){
+
+	public Collection<Question> getQuestions() {
 		return questions;
 	}
-	
-	//setters
-	public void setUser(User i){
+
+	public Collection<UserResponse> getuserResponse() {
+		return userResponse;
+	}
+
+	// setters
+	public void setUser(User i) {
 		user = i;
 	}
-	public void setUserScore(int s){
+
+	public void setAttempt(int a) {
+		this.attempt = a;
+	}
+
+	public void setUserScore(int s) {
 		userScore = s;
 	}
-	public void addQuestion(Question q){
+
+	public void addQuestion(Question q) {
 		questions.add(q);
 	}
-	
-	public Quiz(){
+
+	public Quiz() {
 		questions = new ArrayList<Question>();
-		dateCreated = new Date(); //Default is today
+		userResponse = new ArrayList<UserResponse>();
+		dateCreated = new Date(); // Default is today
 		userScore = 0;
-		
-		//Need some kind of random generation here for questions to pop 'em into the list
+
+		// Need some kind of random generation here for questions to pop 'em
+		// into the list
 	}
 }
